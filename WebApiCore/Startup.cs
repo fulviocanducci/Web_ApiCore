@@ -7,6 +7,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using WebApiCore.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace WebApiCore
 {
@@ -23,21 +29,30 @@ namespace WebApiCore
         }
 
         public IConfigurationRoot Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddMvc();
-        }
+            services.AddEntityFrameworkSqlServer();
+            services.AddDbContext<Database>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), opt =>
+                {                    
+                });
+            });
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+            
+            services.AddMvc();
+            
+        }
+        
+        public void Configure(IApplicationBuilder app, 
+            IHostingEnvironment env,            
+            ILoggerFactory loggerFactory            
+            )
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
-            app.UseMvc();
+            loggerFactory.AddDebug();            
+            app.UseMvc();            
         }
     }
 }
