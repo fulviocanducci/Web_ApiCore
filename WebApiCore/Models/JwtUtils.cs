@@ -22,10 +22,7 @@ namespace WebApiCore.Models
 
             services.AddAuthorization(options =>
             {
-                //options.AddPolicy("DisneyUser",
-                //                  policy => policy.RequireClaim("DisneyCharacter", "IAmMickey"));
-                options.AddPolicy("UserApi",
-                    policy => policy.RequireClaim("Auth", "WebApi"));
+                options.AddPolicy("UserApi", policy => policy.RequireClaim("Auth", "WebApi"));
             });
             
         }

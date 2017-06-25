@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
-
+using System;
 namespace WebApiCore.Controllers
 {
     [Produces("application/json")]
@@ -57,7 +57,11 @@ namespace WebApiCore.Controllers
             {
                 access_token = encodedJwt,
                 expires_seconds = (int)_jwtOptions.ValidFor.TotalSeconds, 
-                expires_minutes = _jwtOptions.ValidFor.Minutes
+                expires_minutes = _jwtOptions.ValidFor.Minutes,
+                expires_create = _jwtOptions.NotBefore.ToString("yyyy-MM-ddTHH:mm:ss.fff"),
+                expires_remove = _jwtOptions.Expiration.ToString("yyyy-MM-ddTHH:mm:ss.fff"),
+                expires_remove0 = DateTimeOffset.Now.ToString(),
+                time_zone = TimeZoneInfo.Local.StandardName
             };
 
             return Ok(response);

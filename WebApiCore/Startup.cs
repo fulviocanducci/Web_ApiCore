@@ -11,6 +11,7 @@ using WebApiCore.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Localization;
 
 namespace WebApiCore
 {
@@ -48,6 +49,11 @@ namespace WebApiCore
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("pt-BR", "pt-BR")                
+            });
+            
             app.UseJwtBearerAuthenticationWithOptions(Configuration, SigningKey);
             app.UseMvc();
         }
