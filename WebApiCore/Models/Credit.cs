@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebApiCore.Models
 {
-    [Table("Credits")]
+    [Table("Credits")]    
     public class Credit
     {
         [Key]

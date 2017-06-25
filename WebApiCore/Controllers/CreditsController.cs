@@ -3,11 +3,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebApiCore.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApiCore.Controllers
 {
     [Produces("application/json")]
     [Route("api/credits")]
+    [Authorize(Policy = "UserApi")]
     public class CreditsController : Controller
     {
         private readonly Database _database;

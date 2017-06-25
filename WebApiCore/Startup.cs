@@ -11,8 +11,6 @@ using WebApiCore.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace WebApiCore
 {
@@ -29,7 +27,9 @@ namespace WebApiCore
         }
 
         public IConfigurationRoot Configuration { get; }
-        
+        public const string SecretKey = "needtogetthisfromenvironment";
+        public readonly SymmetricSecurityKey SigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddEntityFrameworkSqlServer();
@@ -39,20 +39,17 @@ namespace WebApiCore
                 {                    
                 });
             });
-
             
-            services.AddMvc();
-            
+            services.AddMvcWithPolicy();
+            services.AddJwtOptions(Configuration, SigningKey);            
         }
         
-        public void Configure(IApplicationBuilder app, 
-            IHostingEnvironment env,            
-            ILoggerFactory loggerFactory            
-            )
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,  ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();            
-            app.UseMvc();            
+            loggerFactory.AddDebug();
+            app.UseJwtBearerAuthenticationWithOptions(Configuration, SigningKey);
+            app.UseMvc();
         }
     }
 }
